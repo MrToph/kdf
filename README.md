@@ -1,5 +1,6 @@
 # kdf
 
 ```bash
-cargo r -- secret123 1
+cargo r -- 1
+> type secret
 ```

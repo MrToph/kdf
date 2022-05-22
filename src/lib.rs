@@ -12,18 +12,16 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &str> {
-        if args.len() < 3 {
-            return Err("not enough arguments");
-        }
+    pub fn new(secret: String, iterations: String) -> Result<Config, Box<dyn Error>> {
+        let key = secret.as_bytes().to_vec();
 
-        let key = args[1].as_bytes().to_vec();
-        let iterations = args[2]
+        let iterations = iterations
             .clone()
             .trim()
             .parse()
             .expect("iterations must be a number");
-        // chosen by by dice roll
+
+        // chosen by dice roll
         const SALT: [u8; 32] =
             hex!("afa2064c4afe76d976ddea35e79c04deac4c60d1dc372563bf43a3e93e47efcf");
 
@@ -71,7 +69,7 @@ mod tests {
 
     #[test]
     fn it_works_with_1_iteration() {
-        let config = Config::new(&["kdf".into(), "secret123".into(), "1".into()]).unwrap();
+        let config = Config::new("secret123".into(), "1".into()).unwrap();
 
         let message_hex = [&config.salt[..], &config.key[..]].concat();
         println!("message_hex: {:x}", HexSlice::new(&message_hex));
@@ -85,7 +83,7 @@ mod tests {
 
     #[test]
     fn it_works_with_2_iterations() {
-        let config = Config::new(&["kdf".into(), "secret123".into(), "2".into()]).unwrap();
+        let config = Config::new("secret123".into(), "2".into()).unwrap();
 
         // let message_hex = hex!("69668080f55b44c865d8d645926e844cf22b5ecc43a5f64c29ed69a5a89ad744");
         // println!("message_hex: {:x}", HexSlice::new(&message_hex));
@@ -110,7 +108,7 @@ mod tests {
 
     #[test]
     fn it_matches_config_to_correct_bip39() {
-        let config = Config::new(&["kdf".into(), "secret123".into(), "2".into()]).unwrap();
+        let config = Config::new("secret123".into(), "2".into()).unwrap();
 
         // test vector from enabling "Show entropy details" and pasting the entropy hex string https://iancoleman.io/bip39/
         let expected_bip = "disorder mutual party wild rocket next assault skill isolate number narrow vanish misery recall tooth boss same police certain embody below smooth maximum sheriff";
