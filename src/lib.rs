@@ -71,8 +71,8 @@ mod tests {
     fn it_works_with_1_iteration() {
         let config = Config::new("secret123".into(), "1".into()).unwrap();
 
-        let message_hex = [&config.salt[..], &config.key[..]].concat();
-        println!("message_hex: {:x}", HexSlice::new(&message_hex));
+        // let message_hex = [&config.salt[..], &config.key[..]].concat();
+        // println!("message_hex: {:x}", HexSlice::new(&message_hex));
 
         let expected_hash =
             hex!("69668080f55b44c865d8d645926e844cf22b5ecc43a5f64c29ed69a5a89ad744");
